@@ -1,40 +1,51 @@
-
 #include <iostream>
 using namespace std;
 
+struct No {
+    int ano;
+    No* proximo;
+};
+
+void adicionarAno(No*& inicio, int ano) {
+    No* novo = new No{ano, nullptr};
+    if (!inicio) inicio = novo;
+    else {
+        No* atual = inicio;
+        while (atual->proximo) atual = atual->proximo;
+        atual->proximo = novo;
+    }
+}
+
+void imprimirLista(No* no) {
+    cout << "\nAnos cadastrados:\n";
+    while (no) {
+        cout << no->ano << endl;
+        no = no->proximo;
+    }
+}
+
+void liberarLista(No* no) {
+    while (no) {
+        No* temp = no;
+        no = no->proximo;
+        delete temp;
+    }
+}
 
 int main() {
-    No* lista = NULL;
+    No* lista = nullptr;
     int ano;
-
-    cout << "Digite o ano de inicio do curso (deve ser 2024): ";
+    
+    cout << "Digite o ano de inicio da sua turma de SI: ";
     cin >> ano;
 
-    
-    if (ano != 2024) {   // Segundo Semestre de 2024
+    if (ano != 2024) {
         cout << "Ano inválido. O curso só pode iniciar em 2024.\n";
         return 1;
     }
 
-    // Loop para adicionar anos até 2027
-    while (ano <= 2027) {
-        adicionarAno(lista, ano);
-        if (ano == 2027) {
-            cout << "\n Ano final (2027) atingido. Encerrando...\n";
-            break;
-        }
-        ano++;
-    }
+    while (ano <= 2027) adicionarAno(lista, ano++);
 
-    // Imprimir os anos cadastrados
     imprimirLista(lista);
-
-    // Liberar memória
-    while (lista != nullptr) {
-        No* temp = lista;
-        lista = lista->proximo;
-        delete temp;
-    }
-
-    return 0;
+    liberarLista(lista);
 }
